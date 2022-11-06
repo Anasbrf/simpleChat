@@ -48,7 +48,18 @@ public class ChatClient extends AbstractClient
 
   
   //Instance methods ************************************************
-    
+    public void connectionClosed() {
+        System.out.println("Connection Closed to Server.");
+    }
+
+    /**
+     * Handles errors in connection
+     */
+    public void connectionException(Exception exception) {
+        System.out.println("WARNING - The server has stopped listening for connections\n" +
+                "SERVER SHUTTING DOWN! DISCONNECTING!");
+        quit();
+    }
   /**
    * This method handles all data that comes in from the server.
    *
