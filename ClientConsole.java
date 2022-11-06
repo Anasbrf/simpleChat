@@ -117,19 +117,39 @@ public class ClientConsole implements ChatIF
    */
   public static void main(String[] args) 
   {
-    String host = "";
+     String host;
+        int port;
+        String username;
 
+        /*
+         * Modified for E51
+         * Require a login ID
+         */
+        try {
+            username = args[0];
+        } catch (ArrayIndexOutOfBoundsException e) {
+            System.err.println("No username provided!");
+            System.exit(1);
+            return;
+        }
 
-    try
-    {
-      host = args[0];
+        try {
+            host = args[1];
+        } catch (ArrayIndexOutOfBoundsException e) {
+            host = "localhost";
+        }
+
+        /*
+         * Modified for E49
+         * Allow more than just the default port
+         */
+        try {
+            port = Integer.parseInt(args[2]);
+        } catch (Exception e) {
+            port = DEFAULT_PORT;
+        }
+        ClientConsole chat = new ClientConsole(username, host, port);
+        chat.accept();  //Wait for console data
     }
-    catch(ArrayIndexOutOfBoundsException e)
-    {
-      host = "localhost";
-    }
-    ClientConsole chat= new ClientConsole(host, DEFAULT_PORT);
-    chat.accept();  //Wait for console data
-  }
 }
 //End of ConsoleChat class
