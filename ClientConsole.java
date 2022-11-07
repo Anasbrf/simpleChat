@@ -122,7 +122,6 @@ public class ClientConsole implements ChatIF
         String username;
 
         /*
-         * Modified for E51
          * Require a login ID
          */
         try {
@@ -140,7 +139,6 @@ public class ClientConsole implements ChatIF
         }
 
         /*
-         * Modified for E49
          * Allow more than just the default port
          */
         try {
