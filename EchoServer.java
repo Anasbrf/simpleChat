@@ -39,6 +39,40 @@ public class EchoServer extends AbstractServer
   
   //Instance methods ************************************************
   
+  /*
+     * This method overrides the implementation found in AbstractServer
+     */
+    @Override
+    public synchronized void clientConnected(ConnectionToClient client) {
+        InetAddress newClientIP = client.getInetAddress();
+        String message = "Welcome client at " + newClientIP.getHostAddress() + " !!";
+        Message msg = new Message(message, Message.ORIGIN_SERVER);
+        this.sendToAllClients(msg);
+        System.out.println(message);
+    }
+
+    /*
+     * Override the client disconnected to let everyone know the user left
+     */
+    @Override
+    public synchronized void clientDisconnected(ConnectionToClient client) {
+        String message = client.getInfo("username") + " has logged off!";
+        Message msg = new Message(message, Message.ORIGIN_SERVER);
+        this.sendToAllClients(msg);
+        System.out.println(message);
+    }
+
+    /*
+     * Override the client exception to let everyone know the user left
+     */
+    @Override
+    public synchronized void clientException(ConnectionToClient client, Throwable exception) {
+        String message = client.getInfo("username") + " has logged off!";
+        Message msg = new Message(message, Message.ORIGIN_SERVER);
+        this.sendToAllClients(msg);
+        System.out.println(message);
+    }
+
   /**
    * This method handles any messages received from the client.
    *
