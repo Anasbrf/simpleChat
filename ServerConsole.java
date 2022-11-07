@@ -68,7 +68,7 @@ public class ServerConsole implements ChatIF {
 
             while ((message = fromConsole.readLine()) != null) {
                 server.handleMessageFromServerConsole(message);
-                this.display(message, Message.ORIGIN_SERVER);
+                display(message);
             }
         } catch (Exception ex) {
             System.out.println
