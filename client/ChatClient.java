@@ -75,19 +75,66 @@ public class ChatClient extends AbstractClient
    *
    * @param message The message from the UI.    
    */
-  public void handleMessageFromClientUI(String message)
-  {
-    try
-    {
-      sendToServer(message);
+  public void handleMessageFromClientConsole(String message) {
+        if (message.startsWith("#")) {
+            String[] parameters = message.split(" ");
+            String command = parameters[0];
+            switch (command) {
+                case "#exit":
+                    quit();
+                    break;
+                case "#logoff":
+                    try {
+                        closeConnection();
+                    } catch (IOException e) {
+                        System.out.println("Error closing connection!!!");
+                    }
+                    break;
+                case "#sethost":
+                    if (this.isConnected()) {
+                        System.out.println("Can't do that now. Already connected.");
+                    } else {
+                        this.setHost(parameters[1]);
+                    }
+                    break;
+                case "#setport":
+                    if (this.isConnected()) {
+                        System.out.println("Can't do that now. Already connected.");
+                    } else {
+                        this.setPort(Integer.parseInt(parameters[1]));
+                    }
+                    break;
+                case "#login":
+                    if (this.isConnected()) {
+                        System.out.println("Can't do that now. Already connected.");
+                    } else {
+                        try {
+                            this.openConnection();
+                        } catch (IOException e) {
+                            System.out.println("Error opening connection to server. Perhaps the server is not running!");
+                        }
+                    }
+                    break;
+                case "#gethost":
+                    System.out.println("Current host is " + this.getHost());
+                    break;
+                case "#getport":
+                    System.out.println("Current port is " + this.getPort());
+                    break;
+                default:
+                    System.out.println("Invalid command: '" + command+ "'");
+                    break;
+            }
+        } else {
+            try {
+                sendToServer(message);
+            } catch (IOException e) {
+                clientUI.display
+                        ("Could not send message to server.  Terminating client.", Message.ORIGIN_CLIENT);
+                quit();
+            }
+        }
     }
-    catch(IOException e)
-    {
-      clientUI.display
-        ("Could not send message to server.  Terminating client.");
-      quit();
-    }
-  }
   
   /**
    * This method terminates the client.
