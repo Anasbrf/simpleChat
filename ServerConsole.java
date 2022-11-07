@@ -2,11 +2,11 @@
 // "Object Oriented Software Engineering" and is issued under the open-source
 // license found at www.lloseng.com 
 
-package simplechat;
+package simpleChat;
 
 import simplechat.common.ChatIF;
 import simplechat.common.Message;
-import simplechat.server.ChatServer;
+import simplechat.EchoServer;
 
 import java.io.BufferedReader;
 import java.io.IOException;
