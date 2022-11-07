@@ -80,7 +80,7 @@ public class ChatClient extends AbstractClient
             String[] parameters = message.split(" ");
             String command = parameters[0];
             switch (command) {
-                case "#exit":
+                case "#quit":
                     quit();
                     break;
                 case "#logoff":
