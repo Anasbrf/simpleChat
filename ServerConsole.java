@@ -3,8 +3,8 @@
 // license found at www.lloseng.com 
 
 package simpleChat;
-
-import simpleChat.common.*;
+import simpleChat.common.Message;
+import simpleChat.common.ChatIF;
 import simpleChat.EchoServer;
 
 import java.io.BufferedReader;
