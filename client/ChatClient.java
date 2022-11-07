@@ -45,6 +45,7 @@ public class ChatClient extends AbstractClient
     super(host, port); //Call the superclass constructor
     this.clientUI = clientUI;
     openConnection();
+    this.sendToServer("#login " + username);
   }
 
   
@@ -68,8 +69,13 @@ public class ChatClient extends AbstractClient
    */
   public void handleMessageFromServer(Object msg) 
   {
-    clientUI.display(msg.toString());
-  }
+    if (msg instanceof Message) {
+            Message message = (Message) msg;
+            clientUI.display(message.getMessage(), message.getOrigin());
+        } else {
+            System.out.println("RAW MSG>" + msg.toString());
+        }
+    }
 
   /**
    * This method handles all data coming from the UI            
@@ -144,7 +150,7 @@ public class ChatClient extends AbstractClient
   {
     try
     {
-      closeConnection();
+      this.closeConnection();
     }
     catch(IOException e) {}
     System.exit(0);
