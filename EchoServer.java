@@ -3,7 +3,15 @@
 // license found at www.lloseng.com 
 
 
-import ocsf.server.*;
+package simplechat.server;
+
+
+import ocsf.server.AbstractServer;
+import ocsf.server.ConnectionToClient;
+import simplechat.common.Message;
+
+import java.io.IOException;
+import java.net.InetAddress;
 
 /**
  * This class overrides some of the methods in the abstract 
@@ -62,6 +70,7 @@ public class EchoServer extends AbstractServer
                     try {
                         this.close();
                     } catch (IOException e) {
+		    e.printStackTrace();
                     }
                     break;
                 case "#setport":
@@ -97,7 +106,7 @@ public class EchoServer extends AbstractServer
   /*
      * This method overrides the implementation found in AbstractServer
      */
-    @Override
+    
     public synchronized void clientConnected(ConnectionToClient client) {
         InetAddress newClientIP = client.getInetAddress();
         String message = "Welcome client at " + newClientIP.getHostAddress() + " !!";
@@ -109,7 +118,7 @@ public class EchoServer extends AbstractServer
     /*
      * Override the client disconnected to let everyone know the user left
      */
-    @Override
+    
     public synchronized void clientDisconnected(ConnectionToClient client) {
         String message = client.getInfo("username") + " has logged off!";
         Message msg = new Message(message, Message.ORIGIN_SERVER);
@@ -120,7 +129,7 @@ public class EchoServer extends AbstractServer
     /*
      * Override the client exception to let everyone know the user left
      */
-    @Override
+    
     public synchronized void clientException(ConnectionToClient client, Throwable exception) {
         String message = client.getInfo("username") + " has logged off!";
         Message msg = new Message(message, Message.ORIGIN_SERVER);
@@ -134,12 +143,35 @@ public class EchoServer extends AbstractServer
    * @param msg The message received from the client.
    * @param client The connection from which the message originated.
    */
-  public void handleMessageFromClient
-    (Object msg, ConnectionToClient client)
-  {
-    System.out.println("Message received: " + msg + " from " + client);
-    this.sendToAllClients(msg);
-  }
+  public void handleMessageFromClient(Object msg, ConnectionToClient client) {
+        String message = msg.toString();
+        if (message.startsWith("#")) {
+            String[] params = message.substring(1).split(" ");
+            if (params[0].equalsIgnoreCase("login") && params.length > 1) {
+                if (client.getInfo("username") == null) {
+                    client.setInfo("username", params[1]);
+                } else {
+                    try {
+                        client.sendToClient(new Message("Your username has already been set!", Message.ORIGIN_SERVER));
+                    } catch (IOException e) {
+                    }
+                }
+
+            }
+        } else {
+            if (client.getInfo("username") == null) {
+                try {
+                    client.sendToClient(new Message("Please set a username before messaging the server!", Message.ORIGIN_SERVER));
+                    client.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                System.out.println("Message received: " + msg + " from " + client.getInfo("username"));
+                this.sendToAllClients(new Message(client.getInfo("username") + " > " + message, Message.ORIGIN_CLIENT));
+            }
+        }
+    }
     
   /**
    * This method overrides the one in the superclass.  Called
