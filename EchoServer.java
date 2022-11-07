@@ -3,12 +3,12 @@
 // license found at www.lloseng.com 
 
 
-package simplechat.server;
+package simpleChat;
 
 
 import ocsf.server.AbstractServer;
 import ocsf.server.ConnectionToClient;
-import simplechat.common.Message;
+import simpleChat.common.Message;
 
 import java.io.IOException;
 import java.net.InetAddress;
